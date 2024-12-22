@@ -47,16 +47,18 @@ class PolylineCodec {
     // track of whether we've hit the end of the string. In each
     // loop iteration, a single coordinate is decoded.
     while (index < str.length) {
-      // Reset shift, result, and byte
       byte = null;
       shift = 0;
       result = 0;
 
       do {
+        if (index >= str.length) break; // Prevent out-of-bounds access
         byte = str.codeUnitAt(index++) - 63;
         result |= ((Int32(byte) & Int32(0x1f)) << shift).toInt();
         shift += 5;
       } while (byte >= 0x20);
+
+      if (index >= str.length) break; // Prevent further processing if truncated
 
       latitudeChange =
           ((result & 1) != 0 ? ~(Int32(result) >> 1) : (Int32(result) >> 1))
@@ -65,10 +67,13 @@ class PolylineCodec {
       shift = result = 0;
 
       do {
+        if (index >= str.length) break; // Prevent out-of-bounds access
         byte = str.codeUnitAt(index++) - 63;
         result |= ((Int32(byte) & Int32(0x1f)) << shift).toInt();
         shift += 5;
       } while (byte >= 0x20);
+
+      if (index >= str.length) break; // Prevent further processing if truncated
 
       longitudeChange =
           ((result & 1) != 0 ? ~(Int32(result) >> 1) : (Int32(result) >> 1))
