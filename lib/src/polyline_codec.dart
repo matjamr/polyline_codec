@@ -58,7 +58,7 @@ class PolylineCodec {
         shift += 5;
       } while (byte >= 0x20);
 
-      if (index >= str.length) break; // Prevent further processing if truncated
+      // if (index >= str.length) break; // Prevent further processing if truncated
 
       latitudeChange =
           ((result & 1) != 0 ? ~(Int32(result) >> 1) : (Int32(result) >> 1))
